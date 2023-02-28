@@ -6,24 +6,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
 import com.dinhlong.autostarthotspot.databinding.ActivityMainBinding;
-import com.google.dexmaker.stock.ProxyBuilder;
 
-import java.io.File;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,11 +57,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         mMainBinding.startHotspotButton.setOnClickListener(view -> {
-            HotSpotManager.startTethering(getApplicationContext());
+            if (!HotSpotManager.isHotspotOn(getApplicationContext())) {
+                HotSpotManager.startTethering(getApplicationContext());
+                Log.w(TAG, "Enable hotSpot");
+            } else {
+                Log.w(TAG, "Hotspot already started");
+            }
         });
 
         mMainBinding.stopHotspotButton.setOnClickListener(view -> {
-            HotSpotManager.stopTethering(getApplicationContext());
+            if (HotSpotManager.isHotspotOn(getApplicationContext())) {
+                HotSpotManager.stopTethering(getApplicationContext());
+                Log.w(TAG, "Disable hotSpot");
+            } else {
+                Log.w(TAG, "Hotspot already disabled");
+            }
         });
     }
 

@@ -13,7 +13,12 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             Log.d(TAG, "[ACTION_BOOT_COMPLETED] ");
-            HotSpotManager.startTethering(context.getApplicationContext());
+            if (!HotSpotManager.isHotspotOn(context.getApplicationContext())) {
+                HotSpotManager.startTethering(context.getApplicationContext());
+                Log.w(TAG, "Enable hotSpot");
+            } else {
+                Log.w(TAG, "Hotspot already started");
+            }
         }
     }
 }

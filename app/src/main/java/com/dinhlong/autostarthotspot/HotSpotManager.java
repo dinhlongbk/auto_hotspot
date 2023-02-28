@@ -2,6 +2,7 @@ package com.dinhlong.autostarthotspot;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.util.Log;
 
@@ -13,6 +14,15 @@ import java.lang.reflect.Method;
 
 public class HotSpotManager {
     private static final String TAG = HotSpotManager.class.getName();
+
+    public static boolean isHotspotOn(Context context) {
+        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        try {
+            final Method method = manager.getClass().getDeclaredMethod("isWifiApEnabled");
+            return (Boolean) method.invoke(manager);
+        } catch (final Throwable ignored) {}
+        return false;
+    }
 
     public static boolean startTethering(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
